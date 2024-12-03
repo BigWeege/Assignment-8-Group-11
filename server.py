@@ -80,7 +80,7 @@ while True:
 
                         for result in results:
                             someData = f"The average water consumption per cycle in your smart dishwasher is: {round(result["avgWaterConsumption"], 2)} gallons."
-                    elif myData == "3":
+                    elif myData.decode("utf-8") == "3":
                         print("Query #3 received.")
                         someData = myData.decode('utf-8')
                     incomingSocket.send(bytearray(str(someData), encoding='utf-8'))
