@@ -126,7 +126,7 @@ while True:
                         results = collection_data.aggregate(pipeline)
 
                         for result in results:
-                            someData = f"The device that consumed the most electricity was the {result["_id"]} with a consumption of "
+                            someData = f"The device that consumed the most electricity was the {result["_id"]}."
                         
                         someData = myData.decode('utf-8')
                     incomingSocket.send(bytearray(str(someData), encoding='utf-8'))
