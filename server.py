@@ -127,8 +127,6 @@ while True:
 
                         for result in results:
                             someData = f"The device that consumed the most electricity was the {result["_id"]}."
-                        
-                        someData = myData.decode('utf-8')
                     incomingSocket.send(bytearray(str(someData), encoding='utf-8'))
                 except:
                     incomingSocket.close()
