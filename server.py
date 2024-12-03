@@ -52,7 +52,7 @@ while True:
 
                         for result in results:
                             someData = f"The average moisture inside your kitchen fridge in the past three hours is: {round(result["avgMoisture"], 2)}%."
-                    elif myData == "2":
+                    elif myData.decode("utf-8") == "2":
                         print("Query #2 received.")
                         pipeline = [
                             {
