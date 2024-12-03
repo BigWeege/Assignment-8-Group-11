@@ -23,7 +23,7 @@ while True:
                     myData = incomingSocket.recv(numberOfBytes)
                     if not myData:
                         break
-                    if myData == "1":
+                    if myData.decode("utf-8") == "1":
                         print("Query #1 received.")
                         pipeline = [
                             {
