@@ -12,17 +12,17 @@ while True:
             while True:
                 while True:
                     query = input("Your message here: ") #question being asked 
-                    if query.upper() == "WHAT IS THE AVERAGE MOISTURE INSIDE MY KITCHEN FRIDGE IN THE PAST THREE HOURS?": #question bieng aksed doesnt have to be case sensitive for all queries
+                    if query.upper() == "WHAT IS THE AVERAGE MOISTURE INSIDE MY KITCHEN FRIDGE IN THE PAST THREE HOURS?": #question being asked doesn't have to be case sensitive for all queries
                         message = "1" #send 1 to the client
-                        print("Query #1 recieved.")
+                        print("Query #1 received.")
                         break
                     elif query.upper() == "WHAT IS THE AVERAGE WATER CONSUMPTION PER CYCLE IN MY SMART DISHWASHER?":
                         message = "2" #send 2 to the client
-                        print("Query #2 recieved.")
+                        print("Query #2 received.")
                         break
                     elif query.upper() == "WHICH DEVICE CONSUMED MORE ELECTRICITY AMONG MY THREE IOT DEVICES (TWO REFRIGERATORS AND A DISHWASHER)?":
-                        message = "3" #send 2 to the client
-                        print("Query #3 recieved.")
+                        message = "3" #send 3 to the client
+                        print("Query #3 received.")
                         break
                     else:
                         #query did not match any of the questions and gives list of valid inputs
