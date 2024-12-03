@@ -82,6 +82,52 @@ while True:
                             someData = f"The average water consumption per cycle in your smart dishwasher is: {round(result["avgWaterConsumption"], 2)} gallons."
                     elif myData.decode("utf-8") == "3":
                         print("Query #3 received.")
+                        pipeline = [
+                            {
+                                "$lookup": {
+                                    "from": "smart-table_metadata",
+                                    "localField": "payload.parent_asset_uid",
+                                    "foreignField": "assetUid",
+                                    "as": "metaloc"
+                                }
+                            },
+                            {
+                                "$addFields": {
+                                    "name": "$metaloc.customAttributes.name"
+                                }
+                            },
+                            {
+                                "$unwind": {
+                                    "path": "$name"
+                                }
+                            },
+                            {
+                                "$group": {
+                                    "_id": "$name",
+                                    "totNRG1": {"$sum": {"$toDouble": "$payload.Ammeter - Arnold"}},
+                                    "totNRG2": {"$sum": {"$toDouble": "$payload.sensor 2 fb26ed6e-2bc2-4a83-8e7d-d4889f9b4d4e"}},
+                                    "totNRG3": {"$sum": {"$toDouble": "$payload.Ammeter - Annie"}}
+                                }
+                            },
+                            {
+                                "$addFields": {
+                                    "totNRG": {"$add": [{"$toDouble": "$totNRG1"}, {"$toDouble": "$totNRG2"}, {"$toDouble": "$totNRG3"}]}
+                                }
+                            },
+                            {
+                                "$sort": {
+                                    "totNRG": -1
+                                }
+                            },
+                            {
+                                "$limit": 1
+                            }
+                        ]
+                        results = collection_data.aggregate(pipeline)
+
+                        for result in results:
+                            someData = f"The device that consumed the most electricity was the {result["_id"]}."
+                        
                         someData = myData.decode('utf-8')
                     incomingSocket.send(bytearray(str(someData), encoding='utf-8'))
                 except:
