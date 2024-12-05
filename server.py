@@ -27,7 +27,7 @@ while True:
                         print("Query #1 received.")
                         pipeline = [
                             {
-                                "$lookup": {
+                                "$lookup": { #connecting the virtual data to the metadata database 
                                     "from": "smart-table_metadata",
                                     "localField": "payload.parent_asset_uid",
                                     "foreignField": "assetUid",
@@ -35,20 +35,20 @@ while True:
                                 }
                             },
                             {
-                                "$match": {
+                                "$match": { # filters location, device name and timestamp
                                     "metaloc.customAttributes.additionalMetadata.location": "kitchen",
                                     "metaloc.customAttributes.name": {"$regex": "Fridge"},
                                     "payload.timestamp": {"$lt": str(time.time()), "$gt": str(time.time() - 10800)}
                                 }
                             },
                             {
-                                "$group": {
+                                "$group": { #finds avg moisture
                                     "_id": "$payload.parent_asset_uid",
                                     "avgMoisture": {"$avg": {"$toDouble": "$payload.Moisture Meter - Mike"}}
                                 }
                             }
                         ]
-                        results = collection_data.aggregate(pipeline)
+                        results = collection_data.aggregate(pipeline) #runs list on collection data
 
                         for result in results:
                             someData = f"The average moisture inside your kitchen fridge in the past three hours is: {round(result["avgMoisture"], 2)}%."
@@ -56,7 +56,7 @@ while True:
                         print("Query #2 received.")
                         pipeline = [
                             {
-                                "$lookup": {
+                                "$lookup": { #connecting the virtual data to the metadata database 
                                     "from": "smart-table_metadata",
                                     "localField": "payload.parent_asset_uid",
                                     "foreignField": "assetUid",
@@ -64,12 +64,12 @@ while True:
                                 }
                             },
                             {
-                                "$match": {
+                                "$match": { #checks for dishwasher
                                     "metaloc.customAttributes.name": {"$regex": "Dishwasher"}
                                 }
                             },
                             {
-                                "$group": {
+                                "$group": { #avg water consumption
                                     "_id": "$payload.parent_asset_uid",
                                     "avgWaterConsumption": {
                                         "$avg": {"$toDouble": "$payload.Water Consumption Sensor - Walter"}}
@@ -84,7 +84,7 @@ while True:
                         print("Query #3 received.")
                         pipeline = [
                             {
-                                "$lookup": {
+                                "$lookup": { #connecting the virtual data to the metadata database 
                                     "from": "smart-table_metadata",
                                     "localField": "payload.parent_asset_uid",
                                     "foreignField": "assetUid",
@@ -92,17 +92,17 @@ while True:
                                 }
                             },
                             {
-                                "$addFields": {
+                                "$addFields": { #adds device names from the meta data
                                     "name": "$metaloc.customAttributes.name"
                                 }
                             },
                             {
-                                "$unwind": {
+                                "$unwind": { #gives indivual names instead of a list
                                     "path": "$name"
                                 }
                             },
                             {
-                                "$group": {
+                                "$group": { # sums ammeter readings
                                     "_id": "$name",
                                     "totNRG1": {"$sum": {"$toDouble": "$payload.Ammeter - Arnold"}},
                                     "totNRG2": {"$sum": {"$toDouble": "$payload.sensor 2 fb26ed6e-2bc2-4a83-8e7d-d4889f9b4d4e"}},
@@ -110,17 +110,17 @@ while True:
                                 }
                             },
                             {
-                                "$addFields": {
+                                "$addFields": { # adding the sums together
                                     "totNRG": {"$add": [{"$toDouble": "$totNRG1"}, {"$toDouble": "$totNRG2"}, {"$toDouble": "$totNRG3"}]}
                                 }
                             },
                             {
-                                "$sort": {
+                                "$sort": { #compares and orders devices based on energy consumption(greatest to least)
                                     "totNRG": -1
                                 }
                             },
                             {
-                                "$limit": 1
+                                "$limit": 1 #give the most 
                             }
                         ]
                         results = collection_data.aggregate(pipeline)
