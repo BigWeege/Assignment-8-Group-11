@@ -1,5 +1,6 @@
 import socket
 import time
+import re
 from pymongo import MongoClient
 numberOfBytes = 1024
 
@@ -35,16 +36,36 @@ while True:
                                 }
                             },
                             {
-                                "$match": { # filters location, device name and timestamp
+                                "$match": { #filters location, device name and timestamp
                                     "metaloc.customAttributes.additionalMetadata.location": "kitchen",
                                     "metaloc.customAttributes.name": {"$regex": "Fridge"},
                                     "payload.timestamp": {"$lt": str(time.time()), "$gt": str(time.time() - 10800)}
                                 }
                             },
                             {
+                                "$project": { #singles out the device's moisture reading as long as it contains the substring "Moisture Meter"
+                                    "moisture": {
+                                        "$filter": {
+                                            "input": {
+                                                "$objectToArray": "$payload"
+                                            },
+                                            "as": "payload_filter",
+                                            "cond": {
+                                                "$regexMatch": {"input": "$$payload_filter.k", "regex": re.compile(r"^Moisture Meter")}
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "$unwind": {
+                                    "path": "$moisture"
+                                }
+                            },
+                            {
                                 "$group": { #finds avg moisture
-                                    "_id": "$payload.parent_asset_uid",
-                                    "avgMoisture": {"$avg": {"$toDouble": "$payload.Moisture Meter - Mike"}}
+                                    "_id": "$moisture.k",
+                                    "avgMoisture": {"$avg": {"$toDouble": "$moisture.v"}}
                                 }
                             }
                         ]
@@ -69,10 +90,31 @@ while True:
                                 }
                             },
                             {
+                                "$project": { # singles out the device's water consumption reading as long as it contains the substring "Water Consumption Sensor"
+                                    "water_consumption": {
+                                        "$filter": {
+                                            "input": {
+                                                "$objectToArray": "$payload"
+                                            },
+                                            "as": "payload_filter",
+                                            "cond": {
+                                                "$regexMatch": {"input": "$$payload_filter.k",
+                                                                "regex": re.compile(r"^Water Consumption Sensor")}
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "$unwind": {
+                                    "path": "$water_consumption"
+                                }
+                            },
+                            {
                                 "$group": { #avg water consumption
-                                    "_id": "$payload.parent_asset_uid",
+                                    "_id": "$water_consumption.k",
                                     "avgWaterConsumption": {
-                                        "$avg": {"$toDouble": "$payload.Water Consumption Sensor - Walter"}}
+                                        "$avg": {"$toDouble": "$water_consumption.v"}}
                                 }
                             }
                         ]
@@ -92,31 +134,41 @@ while True:
                                 }
                             },
                             {
-                                "$addFields": { #adds device names from the meta data
+                                "$project": { # singles out the device's current reading as long as it contains the substring "Ammeter"
+                                    "current": {
+                                        "$filter": {
+                                            "input": {
+                                                "$objectToArray": "$payload"
+                                            },
+                                            "as": "payload_filter",
+                                            "cond": {
+                                                "$regexMatch": {"input": "$$payload_filter.k",
+                                                                "regex": re.compile(r"^Ammeter")}
+                                            }
+                                        }
+                                    },
                                     "name": "$metaloc.customAttributes.name"
                                 }
                             },
                             {
-                                "$unwind": { #gives indivual names instead of a list
+                                "$unwind": {
+                                    "path": "$current"
+                                }
+                            },
+                            {
+                                "$unwind": { #gives individual names instead of a list
                                     "path": "$name"
                                 }
                             },
                             {
                                 "$group": { # sums ammeter readings
                                     "_id": "$name",
-                                    "totNRG1": {"$sum": {"$toDouble": "$payload.Ammeter - Arnold"}},
-                                    "totNRG2": {"$sum": {"$toDouble": "$payload.sensor 2 fb26ed6e-2bc2-4a83-8e7d-d4889f9b4d4e"}},
-                                    "totNRG3": {"$sum": {"$toDouble": "$payload.Ammeter - Annie"}}
-                                }
-                            },
-                            {
-                                "$addFields": { # adding the sums together
-                                    "totNRG": {"$add": [{"$toDouble": "$totNRG1"}, {"$toDouble": "$totNRG2"}, {"$toDouble": "$totNRG3"}]}
+                                    "totCurrent": {"$sum": {"$toDouble": "$current.v"}}
                                 }
                             },
                             {
                                 "$sort": { #compares and orders devices based on energy consumption(greatest to least)
-                                    "totNRG": -1
+                                    "totCurrent": -1
                                 }
                             },
                             {
