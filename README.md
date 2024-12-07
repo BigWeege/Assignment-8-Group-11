@@ -90,7 +90,7 @@ For server.py:
 3. Input the port you want your serve to connect to.
 
 For client.py:
-1. In the python code, replace the variable named "CONNECTION STRING" to the Connection URL you got from creating your MongoDB database.
+1. In the python code, replace the variable named "CONNECTION_STRING" to the Connection URL you got from creating your MongoDB database.
 2. To run, type "python client.py".
 3. Input the IP of the server you wish to contact.
 4. Input the port you want to contact the server through.
