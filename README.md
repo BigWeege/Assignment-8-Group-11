@@ -1,10 +1,24 @@
 # Assignment-8-Group-11
 
-For Dataniz:
-
-
 For MongoDB:
+1. Create a free M0 Shared cluster with Google Cloud as your provider.
+2. On the left panel in your dashboard, select Database Access under the Security tab.
+   1. Create a new Database User.
+   2. Select the Password authentication method and create a password.
+   3. Click "Add Built In Role" under Database User Privileges and select "Atlas admin".
+   4. Click "Add User"
+3. On the left panel in your dashboard, select Network Access under the Security tab.
+   1. Press "Add IP Address".
+   2. Add the IP 0.0.0.0/0.
+4. On the left panel in your dashboard, select Clusters under the Database tab.
+   1. Select "Connect" on your database.
+   2. Select "Connect your application".
+   3. Select Python for your driver and choose version 3.6 or later.
+   4. Copy the URL it gives you
+   5. Change the <username> and <password> fields in the URL to be the username and password you created earlier.
 
+For Dataniz:
+1. 
 
 For server.py:
 1. To run, type "python server.py".
