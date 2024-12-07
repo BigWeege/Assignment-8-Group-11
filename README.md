@@ -36,9 +36,53 @@ For Dataniz:
    3. Select the destination you created.
    4. Create a name for the connection topic.
 5. Create your first device (Kitchen Fridge).
+   1. Name the device "Kitchen Fridge".
+   2. Choose an Arduino Pro Mini as the board.
+   3. Create a Moisture Meter.
+      1. Name the sensor whatever you want, as long as it contains the substring "Moisture Meter".
+      2. Make the desired range between 30 and 50% relative humidity.
+   4. Create a custom sensor called an "Ammeter".
+      1. Select the Current Sensor sensor use.
+      2. Name the sensor whatever you want, as long as it contains the substring "Ammeter".
+      3. Make the sensor range between 0 and 20 amps.
+      4. Make the desired range between 10 and 12.5 amps.
+   5. Create a custom sensor called an "Thermistor".
+      1. Select the Temperature Sensor sensor use.
+      2. Name the sensor whatever you want, as long as it contains the substring "Thermistor".
+      3. Make the sensor range between -100 and 100 degrees Celsius.
+      4. Make the desired range between -10 and 4 degreees Celsius.
+   6. Create metadata.
+      1. Give the device a latitude and longitude of your choice.
+      2. Create custom metadata with the key name "location" and the value name "kitchen".
 6. Create your second device (Bedroom Fridge).
+   1. Duplicate the Kitchen Fridge device.
+   2. Rename the device to "Bedroom Fridge".
+   3. Rename the Moisture Meter to something that contains the substring "Moisture Meter".
+   4. Rename the Ammeter to something that contains the substring "Ammeter".
+   5. Rename the Thermistor to something that contains the substring "Thermistor".
+   6. Create metadata.
+      1. Give the device a latitude and longitude of your choice.
+      2. Create custom metadata with the key name "location" and the value name "bedroom".
 7. Create your third device (Dishwasher).
+   1. Name the device "Dishwasher".
+   2. Choose an Arduino Pro Mini as the board.
+   3. Create a custom sensor called a "Water Consumption Sensor".
+      1. Select the Water Flow Sensor sensor use.
+      2. Name the sensor whatever you want, as long as it contains the substring "Water Consumption Sensor".
+      3. Make the sensor range between 0 and 99 gallons per cycle.
+      4. Make the desired range between 10 and 12.5 amps.
+   4. Create a custom sensor called an "Ammeter".
+      1. Select the Current Sensor sensor use.
+      2. Name the sensor whatever you want, as long as it contains the substring "Ammeter".
+      3. Make the sensor range between 0 and 20 amps.
+      4. Make the desired range between 10 and 12.5 amps. 
+   5. Create metadata.
+      1. Give the device a latitude and longitude of your choice.
+      2. Create custom metadata with the key name "location" and the value name "kitchen".
 8. Generate data.
+   1. Click "Generate & View".
+   2. Turn each device on.
+   3. Each device's sensors should generate data every minute.
 
 For server.py:
 1. To run, type "python server.py".
@@ -46,12 +90,13 @@ For server.py:
 3. Input the port you want your serve to connect to.
 
 For client.py:
-1. To run, type "python client.py".
-2. Input the IP of the server you wish to contact.
-3. Input the port you want to contact the server through.
-4. Input one of the three queries:
+1. In the python code, replace the variable named "CONNECTION STRING" to the Connection URL you got from creating your MongoDB database.
+2. To run, type "python client.py".
+3. Input the IP of the server you wish to contact.
+4. Input the port you want to contact the server through.
+5. Input one of the three queries:
    1. What is the average moisture inside my kitchen fridge in the past three hours?
    2. What is the average water consumption per cycle in my smart dishwasher?
    3. Which device consumed more electricity among my three IoT devices (two refrigerators and a dishwasher)?
-5. After the server responds, type "y" to continue messaging the server or "n" to
+6. After the server responds, type "y" to continue messaging the server or "n" to
 end the program.
