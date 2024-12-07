@@ -4,7 +4,7 @@ import re
 from pymongo import MongoClient
 numberOfBytes = 1024
 
-CONNECTION_STRING = "mongodb+srv://smart-home:ironwill@cluster0.1coyr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+CONNECTION_STRING = "mongodb+srv://smart-home:ironwill@cluster0.1coyr.mongodb.net/"
 cluster = MongoClient(CONNECTION_STRING)
 db = cluster['test']
 collection_meta = db['smart-table_metadata']
