@@ -18,7 +18,27 @@ For MongoDB:
    5. Change the <username> and <password> fields in the URL to be the username and password you created earlier.
 
 For Dataniz:
-1. 
+1. On the left panel in your dashboard, select Profile & Settings.
+   1. Click "Generate New MQTT Key".
+   2. Copy the generated key.
+2. Create a Source.
+   1. Create a name for the source.
+   2. Select the Dataniz Source URL source type.
+   3. Paste your generated MQTT Key as the MQTT Key.
+3. Create a Destination.
+   1. Create a name for the database.
+   2. Select MongoDB as the Database Type.
+   3. Paste the Connection URL you got from creating your MongoDB database.
+   4. Name the table "smart-table".
+4. Create a Link.
+   1. Create a name for the link.
+   2. Select the source you created.
+   3. Select the destination you created.
+   4. Create a name for the connection topic.
+5. Create your first device (Kitchen Fridge).
+6. Create your second device (Bedroom Fridge).
+7. Create your third device (Dishwasher).
+8. Generate data.
 
 For server.py:
 1. To run, type "python server.py".
